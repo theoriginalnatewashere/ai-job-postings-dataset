@@ -122,19 +122,6 @@ single-strip composition · sortable native-table explorer with live count ·
 provenance-on-every-figure · footer provenance chain · coral `focus-visible`
 · sm/md/lg-only responsive collapses · `prefers-reduced-motion` respect.
 
-## Deliberately NOT copied
-
-- React/TanStack SSR app shell, router, query wiring (template is a static,
-  dependency-free page; see porting map below).
-- Tailwind utility compilation → translated to semantic component CSS on the
-  same tokens.
-- shadcn `ui/` set, Radix, recharts, sonner, RHF/zod — installed-but-unused in
-  the reference; importing them would break the visual language.
-- The Junior-DS dataset, its CORE/COMMON/USEFUL/NICHE thresholds (now
-  configurable `tiers`), and all dataset-specific charts.
-- The reference's unused dark-mode stub (the system is light-only by design).
-- Lovable scaffolding (bunfig guard, error reporting, SSR entry).
-
 ## Porting map (if a future project uses the React/Lovable stack)
 
 | Reference (React) | Template (vanilla) |

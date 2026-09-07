@@ -1,0 +1,22 @@
+/* ============================================================
+   project.css — dataset-specific presentation additions
+   (small multiples) for the AI-job-postings dashboard.
+   Consumes only design tokens from tokens.css; documented as a
+   project override in DATA-NOTES.md.
+   ============================================================ */
+
+.small-multiples {
+  display: grid; gap: 1px; background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.sm-panel { background: var(--paper); padding: 12px 12px 6px; }
+.sm-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 8px; margin-bottom: 4px;
+}
+.sm-name { font-size: 13px; font-weight: 600; line-height: 1.2; }
+.sm-value { font-size: 13.5px; font-weight: 600; color: var(--coral); }
+.sm-cap { display: flex; justify-content: space-between; gap: 8px; margin-top: 2px; }
+
+@media (min-width: 640px)  { .small-multiples { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .small-multiples { grid-template-columns: repeat(3, 1fr); } }

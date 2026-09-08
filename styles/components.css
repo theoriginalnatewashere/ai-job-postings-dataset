@@ -327,6 +327,55 @@ a.ext-link:hover { text-decoration-color: var(--coral); }
   .cellgrid.cols-lg4 { grid-template-columns: repeat(4, 1fr); }
 }
 
+/* ---------- about me (author band, before the provenance footer) ----------
+   Two-column from md (text | portrait), stacked below in reading order:
+   name + text → portrait → links. Name sizes (30/38/52) keep an
+   uppercase two-line display name inside its column at every width. */
+.about {
+  border-top: 1px solid rgb(41 84 92 / 0.25);
+  background: var(--paper);
+  padding: 56px 0;
+  scroll-margin-top: 64px;
+}
+.about-grid { display: grid; gap: 40px; min-width: 0; }
+.about-text { min-width: 0; }
+.about-kicker {
+  display: flex; align-items: center; gap: 8px; margin: 0 0 20px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--ink-soft);
+}
+.about-kicker::before { content: ""; width: 10px; height: 10px; background: var(--coral); flex-shrink: 0; }
+.about-name {
+  margin: 0; overflow-wrap: anywhere; text-wrap: balance;
+  /* Sized for an uppercase two-line display name (worst case: a long
+     all-caps surname). 30/38/52 keep e.g. "SUPAKITCHUMNAN" inside its
+     column at every breakpoint; the 34→44→52 hero steps overflow. */
+  font-size: 30px; font-weight: 700; line-height: 1.08;
+}
+.about-subtitle { margin: 16px 0 0; font-size: 16px; font-weight: 600; }
+.about-bio { margin: 12px 0 0; max-width: 62ch; font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); }
+.about-facts { margin: 24px 0 0; padding: 0; list-style: none; max-width: 62ch; }
+.about-facts li { display: flex; gap: 12px; border-top: 1px solid var(--rule-soft); padding: 8px 0; }
+.about-facts li:first-child { border-top: 0; padding-top: 0; }
+.about-fact-num { flex-shrink: 0; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; color: var(--coral); }
+.about-fact { font-size: 13px; line-height: 1.55; color: var(--ink-soft); }
+.about-portrait { margin: 0; }
+.about-portrait img { display: block; width: 100%; max-width: 380px; height: auto; }
+.about-links {
+  display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 40px 0 0; padding: 16px 0 0;
+  border-top: 1px solid var(--rule); list-style: none;
+}
+.about-links .ext-link { text-transform: uppercase; letter-spacing: 0.08em; }
+
+@media (min-width: 768px) {
+  .about-grid { grid-template-columns: minmax(0, 1fr) clamp(240px, 32%, 380px); gap: 64px; align-items: center; }
+  .about-portrait { justify-self: center; }
+  .about-name { font-size: 38px; }
+}
+@media (min-width: 1024px) {
+  .about-name { font-size: 52px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
   html { scroll-behavior: auto; }

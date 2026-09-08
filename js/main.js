@@ -33,6 +33,8 @@ import {
   wireValidation,
 } from "./components/figures.js";
 import { renderExplorer, wireExplorer } from "./components/explorer.js";
+import { renderAboutMe } from "./components/about.js";
+import { authorProfile } from "./data/author-profile.js";
 import { renderChart } from "./charts/registry.js";
 import { esc } from "./lib/util.js";
 import "./charts/index.js"; /* registers built-in encodings */
@@ -131,6 +133,7 @@ ${nav()}
     )
     .join("\n")}
 </main>
+${renderAboutMe(authorProfile)}
 ${footer()}`;
 
 /* ---------- behavior ---------- */

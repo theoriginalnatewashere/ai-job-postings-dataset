@@ -12,6 +12,7 @@
    3. every data-tip key referenced is present in the tips registry
    4. counts stay within 0..n; strip (part-of-whole) datasets sum to n
    5. explorer filter/sort pipeline behaves on empty and no-match states
+   6. about-me band renders; portrait asset and link hygiene checked
    ============================================================ */
 
 import { study, explorerTip } from "./js/data/study-data.js";
@@ -31,6 +32,12 @@ import {
   renderValidation,
 } from "./js/components/figures.js";
 import { renderExplorer, computeRows } from "./js/components/explorer.js";
+import { existsSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { esc } from "./js/lib/util.js";
+import { renderAboutMe } from "./js/components/about.js";
+import { authorProfile } from "./js/data/author-profile.js";
 
 let errors = 0;
 let warnings = 0;
@@ -137,6 +144,53 @@ if (exCfg.records) {
   else ok(`explorer pipeline: ${all.length}/${exCfg.records.length} rows with empty filters`);
   const none = computeRows(exCfg, { q: "zzz-no-match", sel: {}, sortKey, dir: 1 });
   if (none.length !== 0) err("explorer: no-match search must return zero rows");
+}
+
+/* 6. about-me band (rendered by main.js before the provenance footer) */
+try {
+  const aboutHtml = renderAboutMe(authorProfile);
+  collect(aboutHtml);
+  if (/\bundefined\b/.test(aboutHtml)) err("about-me: rendered output contains \"undefined\"");
+  const nameParts = Array.isArray(authorProfile.name) ? authorProfile.name : [authorProfile.name];
+  if (!nameParts.every((part) => aboutHtml.includes(esc(part)))) err("about-me: author name missing from render");
+  const factCount = (aboutHtml.match(/about-fact-num/g) ?? []).length;
+  if (factCount !== (authorProfile.facts ?? []).length) {
+    err(`about-me: rendered ${factCount} facts but the profile defines ${(authorProfile.facts ?? []).length}`);
+  } else if (factCount !== 3) {
+    warn(`about-me: ${factCount} fun facts rendered (template convention is 3)`);
+  }
+  const links = authorProfile.links ?? [];
+  const wiredLinks = links.filter(
+    (l) =>
+      aboutHtml.includes(`href="${esc(l.url)}"`) &&
+      aboutHtml.includes('target="_blank"') &&
+      aboutHtml.includes('rel="noopener noreferrer"')
+  );
+  if (wiredLinks.length !== links.length) err("about-me: one or more links missing href, target, or rel");
+  let imgFile = null;
+  if (authorProfile.image.startsWith("/")) {
+    /* Root-absolute shared asset — resolve against the workspace root by
+       walking up from this file (dashboards live at varying depths). */
+    let dir = dirname(fileURLToPath(import.meta.url));
+    for (let i = 0; i < 6 && !imgFile; i += 1) {
+      const candidate = join(dir, authorProfile.image.slice(1));
+      if (existsSync(candidate)) imgFile = candidate;
+      dir = dirname(dir);
+    }
+  } else {
+    imgFile = fileURLToPath(new URL(authorProfile.image, import.meta.url));
+  }
+  if (!imgFile || !existsSync(imgFile)) {
+    err(`about-me: portrait asset not found at ${authorProfile.image}`);
+  }
+  if (!failed && !errors) {
+    ok(`about-me: renders with ${factCount} facts, ${wiredLinks.length} links, portrait asset present`);
+  }
+  if (links.some((l) => /your-|\.example/.test(l.url))) {
+    warn("about-me: link URLs are placeholders — edit js/data/author-profile.js before publishing");
+  }
+} catch (e) {
+  err(`about-me: ${e.message}`);
 }
 
 ok(`registered encodings: ${availableEncodings().join(", ")}`);

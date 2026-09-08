@@ -26,9 +26,11 @@ export const authorProfile = {
     "My natural habitat is somewhere between a dashboard, a notebook, and a research rabbit hole.",
   ],
 
-  /** Approved portrait — the single canonical shared asset from the
-      template (no local copy; requires serving from the workspace root). */
-  image: "/templates/research-dashboard/assets/author/nethan-profile.png",
+  /** Approved portrait — referenced site-root-absolute so every dashboard on
+      the shared Netlify site reuses the one deployed asset. Canonical source:
+      templates/research-dashboard/assets/author/nethan-profile.png — each
+      build copies it to <publish dir>/assets/author/nethan-profile.png. */
+  image: "/assets/author/nethan-profile.png",
   imageAlt: "Monochrome portrait of Nethan Supakitchumnan over a green circular accent",
   imageWidth: 1122,
   imageHeight: 1402,
